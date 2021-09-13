@@ -3,6 +3,7 @@ package com.project.service.taxi.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class OrderResponseDTO {
@@ -14,13 +15,13 @@ public class OrderResponseDTO {
     private String startAddress;
     private String endAddress;
     @JsonFormat(pattern = "HH:mm:ss dd.MM.yyyy")
-    private Date dateCreated;
+    private LocalDateTime dateCreated;
     private boolean soberDriver;
 
     public OrderResponseDTO(Long idOrder, String text,
                             BigDecimal price, String modelCar,
                             String brandName, String startAddress,
-                            String endAddress, Date dateCreated,
+                            String endAddress, LocalDateTime dateCreated,
                             boolean soberDriver) {
         this.idOrder = idOrder;
         this.text = text;
@@ -49,11 +50,11 @@ public class OrderResponseDTO {
         this.brandName = brandName;
     }
 
-    public Date getDateCreated() {
+    public LocalDateTime getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Date dateCreated) {
+    public void setDateCreated(LocalDateTime dateCreated) {
         this.dateCreated = dateCreated;
     }
 

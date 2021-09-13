@@ -4,18 +4,18 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders")
-public class Orders {
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
+    @Column(name = "id")
     private Long orderId;
 
-    @OneToOne
-    @JoinColumn(name = "user_id",nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "car_id")
@@ -24,15 +24,15 @@ public class Orders {
     private BigDecimal price;
     @CreationTimestamp
     @Column(name = "creation_date_order")
-    private Date creationDate;
+    private LocalDateTime creationDate;
 
-    public Orders(Long carId, BigDecimal price,User user) {
+    public Order(Long carId, BigDecimal price, User user) {
         this.carId = carId;
         this.price = price;
         this.user = user;
     }
 
-    public Orders() {
+    public Order() {
     }
 
     public Long getOrderId() {
@@ -51,7 +51,7 @@ public class Orders {
         this.user = user;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -71,13 +71,13 @@ public class Orders {
         this.price = price;
     }
 
-    public Date getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
     @Override
     public String toString() {
-        return "Orders{" +
+        return "Order{" +
                 "orderId=" + orderId +
                 ", carId=" + carId +
                 ", price=" + price +

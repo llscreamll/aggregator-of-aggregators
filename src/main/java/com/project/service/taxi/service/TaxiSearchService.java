@@ -24,17 +24,17 @@ public class TaxiSearchService {
 
     @Async("asyncExecutor")
     public CompletableFuture<List<TaxiCar>> findYandexTaxi(String startStreet, String endStreet, Principal principal) {
-        return CompletableFuture.completedFuture(taxiRepositoryIml.findYandexTaxi(startStreet, endStreet, principal));
+        return CompletableFuture.completedFuture(taxiRepositoryIml.findYandexTaxi(startStreet, endStreet, principal.getName()));
     }
 
     @Async("asyncExecutor")
     public CompletableFuture<List<TaxiCar>> findUberTaxi(String startStreet, String endStreet, Principal principal) {
-        return CompletableFuture.completedFuture(taxiRepositoryIml.findUberTaxi(startStreet, endStreet, principal));
+        return CompletableFuture.completedFuture(taxiRepositoryIml.findUberTaxi(startStreet, endStreet, principal.getName()));
     }
 
     @Async("asyncExecutor")
     public CompletableFuture<List<TaxiCar>> findGetTaxi(String startStreet, String endStreet, Principal principal) {
-        return CompletableFuture.completedFuture(taxiRepositoryIml.findGettTaxi(startStreet, endStreet, principal));
+        return CompletableFuture.completedFuture(taxiRepositoryIml.findGettTaxi(startStreet, endStreet, principal.getName()));
     }
 
     public HashMap<String, List<TaxiCar>> findAllTaxi(String startAddress, String finishAddress, Principal principal) throws ExecutionException, InterruptedException {

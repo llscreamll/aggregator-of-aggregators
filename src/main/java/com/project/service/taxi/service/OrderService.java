@@ -2,7 +2,7 @@ package com.project.service.taxi.service;
 
 import com.project.service.taxi.dto.OrderRequestDTO;
 import com.project.service.taxi.dto.OrderResponseDTO;
-import com.project.service.taxi.entity.Orders;
+import com.project.service.taxi.entity.Order;
 import com.project.service.taxi.entity.TaxiCar;
 import com.project.service.taxi.entity.User;
 import com.project.service.taxi.exception.NotFoundException;
@@ -10,14 +10,12 @@ import com.project.service.taxi.exception.OrdersException;
 import com.project.service.taxi.repository.OrderRepository;
 import com.project.service.taxi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import java.security.Principal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -37,14 +35,13 @@ public class OrderService {
     }
 
 
-    public ResponseEntity<?> createOrder(OrderRequestDTO orderRequestDTO, BindingResult result, Principal principal) throws ExecutionException, InterruptedException {
-        ResponseEntity<?> errorMap = validation(result);
-        if (errorMap != null) return errorMap;
-        Orders orders = new Orders();
-
+    public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO, BindingResult result, Principal principal) throws ExecutionException, InterruptedException {
+        Map<String, String> errorMap = validation(result);
+        if (errorMap != null) throw new OrdersException(errorMap.toString());
+        Order order = new Order();
         User user = userRepository.findByLogin(principal.getName()).orElseThrow(NotFoundException::new);
-        if (user.getOrders() != null) {
-          throw new OrdersException();
+        if (user.getOrder() != null) {
+          throw new OrdersException("You have active order");
         }
 
         TaxiCar car = taxiSearchService.getTaxiByBrand(orderRequestDTO.getBrand(),
@@ -53,36 +50,36 @@ public class OrderService {
                 principal)
                 .stream().filter(el -> el.getId().equals(orderRequestDTO.getCarId())).findFirst().orElseThrow(NotFoundException::new);
 
-        orders.setCarId(orderRequestDTO.getCarId());
-        orders.setUser(user);
-        orders.setPrice(car.getPrice());
-        Long orderId = orderRepository.save(orders).getOrderId();
+        order.setCarId(orderRequestDTO.getCarId());
+        order.setUser(user);
+        order.setPrice(car.getPrice());
+        Long orderId = orderRepository.save(order).getOrderId();
 
-        return new ResponseEntity<>(new OrderResponseDTO(orderId, "Заказ оформлен",
-                orders.getPrice(), car.getModel(),
+        return new OrderResponseDTO(orderId, "Заказ оформлен",
+                order.getPrice(), car.getModel(),
                 orderRequestDTO.getBrand(),
                 orderRequestDTO.getStartAddress(),
                 orderRequestDTO.getEndAddress(),
-                orders.getCreationDate(),
-                car.isSoberDriver()), HttpStatus.CREATED);
+                order.getCreationDate(),
+                car.isSoberDriver());
 
     }
 
     public OrderResponseDTO orderCancel(Long orderId) {
-        Orders orders = orderRepository.findById(orderId).orElseThrow(NotFoundException::new);
-        orderRepository.delete(orders);
-        return new OrderResponseDTO(orders.getOrderId(), "Заказ отменен", orders.getPrice(),
-                "", "", "", "", new Date(), true);
+        Order order = orderRepository.findById(orderId).orElseThrow(NotFoundException::new);
+        orderRepository.delete(order);
+        return new OrderResponseDTO(order.getOrderId(), "Заказ отменен", order.getPrice(),
+                "", "", "", "", LocalDateTime.now(), true);
 
     }
 
-    private ResponseEntity<?> validation(BindingResult result) {
-        if (result.hasErrors()) {
+    private Map<String, String> validation(BindingResult result) {
+        if (result != null && result.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
             for (FieldError error : result.getFieldErrors()) {
                 errorMap.put(error.getField(), error.getDefaultMessage());
             }
-            return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
+            return errorMap;
         }
         return null;
     }

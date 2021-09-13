@@ -28,7 +28,7 @@ public class OrderController {
 
     @PostMapping("/order")
     public ResponseEntity<?> createOrder(@Validated  @RequestBody OrderRequestDTO orderRequestDTO , BindingResult result, Principal principal) throws ExecutionException, InterruptedException {
-    return  orderService.createOrder(orderRequestDTO,result,principal) ;
+    return  new ResponseEntity<>(orderService.createOrder(orderRequestDTO,result,principal),HttpStatus.CREATED) ;
     }
 
     @PostMapping("/order/cancel/{orderId}")

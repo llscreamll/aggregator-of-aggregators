@@ -20,17 +20,17 @@ public class TaxiRepositoryIml implements TaxiRepository {
 
 
     @Override
-    public List<TaxiCar> findYandexTaxi(String startAddress, String finishAddress, Principal principal) {
-        return connector.searchYandexTaxi(startAddress, finishAddress, principal.getName());
+    public List<TaxiCar> findYandexTaxi(String startAddress, String finishAddress, String userIdentification) {
+        return connector.searchYandexTaxi(startAddress, finishAddress, userIdentification);
     }
 
     @Override
-    public List<TaxiCar> findUberTaxi(String startAddress, String finishAddress, Principal principal) {
-        return connector.searchUberTaxi(startAddress, finishAddress, principal.getName());
+    public List<TaxiCar> findUberTaxi(String startAddress, String finishAddress, String userIdentification) {
+        return connector.searchUberTaxi(startAddress, finishAddress, userIdentification);
     }
 
     @Override
-    public List<TaxiCar> findGettTaxi(String startAddress, String finishAddress, Principal principal) {
-        return connector.searchGettTaxi(startAddress, finishAddress, principal.getName());
+    public List<TaxiCar> findGettTaxi(String startAddress, String finishAddress, String userIdentification) {
+        return connector.searchGettTaxi(startAddress, finishAddress, userIdentification);
     }
 }

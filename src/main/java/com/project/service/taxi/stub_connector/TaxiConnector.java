@@ -1,16 +1,16 @@
 package com.project.service.taxi.stub_connector;
 
 import com.project.service.taxi.entity.TaxiCar;
-import com.project.service.taxi.exception.NotFoundException;
 import com.project.service.taxi.stub_connector.utils.UtilsGeneration;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class TaxiConnector implements Connector {
-    ConcurrentHashMap<String, ConcurrentHashMap<String, List<TaxiCar>>> foundTaxiForTheUser = new ConcurrentHashMap<>();
+    ConcurrentHashMap<String, HashMap<String, List<TaxiCar>>> foundTaxiForTheUser = new ConcurrentHashMap<>();
 
     @Override
     public List<TaxiCar> searchYandexTaxi(String startAddress, String finishAddress, String userIdentification) {
@@ -29,24 +29,14 @@ public class TaxiConnector implements Connector {
 
     @Override
     public List<TaxiCar> searchTaxiByBrand(String brand, String startAddress, String finishAddress, String userIdentification) {
-        switch (brand) {
-            case "yandex": {
-                return checkFoundTaxi(startAddress, finishAddress, userIdentification, "yandex");
-            }
-            case "uber": {
-                return checkFoundTaxi(startAddress, finishAddress, userIdentification, "uber");
-            }
-            case "gett": {
-                return checkFoundTaxi(startAddress, finishAddress, userIdentification, "gett");
-            }
-        }
-        throw new NotFoundException();
+        return checkFoundTaxi(startAddress, finishAddress, userIdentification, brand);
+
     }
 
 
     public List<TaxiCar> checkFoundTaxi(String startAddress, String finishAddress, String userIdentification, String brand) {
         if (!foundTaxiForTheUser.containsKey(userIdentification)) {
-            foundTaxiForTheUser.put(userIdentification, new ConcurrentHashMap<>());
+            foundTaxiForTheUser.put(userIdentification, new HashMap<>());
         }
         if (foundTaxiForTheUser.get(userIdentification).get(brand) == null) {
             foundTaxiForTheUser.get(userIdentification).put(brand, UtilsGeneration.generationCar(brand, startAddress, finishAddress));

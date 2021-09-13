@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface TaxiRepository {
 
-    List<TaxiCar> findYandexTaxi(String startAddress, String finishAddress, Principal principal) throws InterruptedException;
-    List<TaxiCar> findUberTaxi(String startAddress, String finishAddress, Principal principal) throws InterruptedException;
-    List<TaxiCar> findGettTaxi(String startAddress, String finishAddress, Principal principal) throws InterruptedException;
+    List<TaxiCar> findYandexTaxi(String startAddress, String finishAddress, String userIdentification) throws InterruptedException;
+    List<TaxiCar> findUberTaxi(String startAddress, String finishAddress, String userIdentification) throws InterruptedException;
+    List<TaxiCar> findGettTaxi(String startAddress, String finishAddress,String userIdentification) throws InterruptedException;
 
 }

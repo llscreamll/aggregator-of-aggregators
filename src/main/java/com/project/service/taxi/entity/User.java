@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_Id")
+    @Column(name = "id")
     private Long id;
     @Column(name = "login")
     private String login;
@@ -21,7 +21,7 @@ public class User {
     private RoleUser role;
 
     @OneToOne(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE, orphanRemoval = true,optional = false)
-    private Orders orders;
+    private Order order;
 
     public User() {
     }
@@ -64,11 +64,11 @@ public class User {
         this.password = password;
     }
 
-    public Orders getOrders() {
-        return orders;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setOrders(Orders orders) {
-        this.orders = orders;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }

@@ -1,11 +1,11 @@
 package com.project.service.taxi.auth;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 public class AuthRequest {
-    @NotEmpty(message = "Login не должен быть пустым")
+    @Size(min = 3,max = 20,message = "должен состоять из 3-20 символов")
     private String login;
-    @NotEmpty(message = "password не должен быть пустым")
+    @Size(min = 3,max = 50,message = "должен состоять из 3-50 символов")
     private String password;
     public AuthRequest() {
     }

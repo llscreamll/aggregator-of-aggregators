@@ -15,6 +15,7 @@ CREATE TABLE orders
     car_id   integer  NOT NULL,
     price decimal  NOT NULL,
     creation_date_order DATE  NOT NULL,
+    canceled_order boolean default false NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY (user_id) REFERENCES USERS (id)
 );

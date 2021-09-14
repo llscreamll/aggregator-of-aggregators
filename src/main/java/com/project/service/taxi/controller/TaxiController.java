@@ -1,7 +1,7 @@
 package com.project.service.taxi.controller;
 
-import com.project.service.taxi.entity.TaxiCar;
-import com.project.service.taxi.service.TaxiSearchService;
+import com.project.service.taxi.service.TaxiService;
+import com.project.service.taxi.stub_connector.TaxiCar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,31 +13,29 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 @RestController
 public class TaxiController {
-    private final TaxiSearchService taxiSearchService;
+    private final TaxiService taxiService;
 
     @Autowired
-    public TaxiController(TaxiSearchService taxiSearchService) {
-        this.taxiSearchService = taxiSearchService;
+    public TaxiController(TaxiService taxiService) {
+        this.taxiService = taxiService;
     }
 
     @GetMapping("/prices")
     public ResponseEntity<HashMap<String, List<TaxiCar>>> getPrices(@RequestParam("start_place_address") String startAddress,
-                                                                    @RequestParam("finish_place_address") String finishAddress
-            , Principal principal) throws ExecutionException, InterruptedException {
+                                                                    @RequestParam("finish_place_address") String finishAddress,Principal principal) {
 
-        return new ResponseEntity<>(taxiSearchService.findAllTaxi(startAddress, finishAddress, principal), HttpStatus.OK);
+        return new ResponseEntity<>(taxiService.findAllTaxi(startAddress, finishAddress, principal.getName()), HttpStatus.OK);
     }
 
     @GetMapping("/prices/{brand}")
     public ResponseEntity<List<TaxiCar>> getPricesByBrand(@PathVariable("brand") String brandName,
                                                           @RequestParam("start_place_address") String startAddress,
                                                           @RequestParam("finish_place_address") String finishAddress,
-                                                          Principal principal) throws ExecutionException, InterruptedException {
-        return new ResponseEntity<>(taxiSearchService.getTaxiByBrand(brandName, startAddress, finishAddress,principal), HttpStatus.OK);
+                                                          Principal principal){
+        return new ResponseEntity<>(taxiService.getTaxiByBrand(brandName, startAddress, finishAddress,principal.getName()), HttpStatus.OK);
     }
 
 }

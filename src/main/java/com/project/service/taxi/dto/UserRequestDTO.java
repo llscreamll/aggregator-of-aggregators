@@ -5,10 +5,15 @@ import com.project.service.taxi.entity.erole.RoleUser;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 public class UserRequestDTO {
-
+    @NotBlank(message = "не должен быть пустым")
+    @Size(min = 3,max = 20,message = "должен состоять из 3-20 символов")
     private String login;
+    @NotBlank(message = "не должен быть пустым")
+    @Size(min = 3,max = 50,message = "должен состоять из 3-50 символов")
     private String password;
 
     @Enumerated(EnumType.STRING)

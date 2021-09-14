@@ -1,14 +1,14 @@
 package com.project.service.taxi.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.service.taxi.stub_connector.TaxiCar;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class OrderResponseDTO {
-    private Long idOrder;
-    private String text;
+    private Long id;
+    private String info;
     private BigDecimal price;
     private String modelCar;
     private String brandName;
@@ -16,54 +16,37 @@ public class OrderResponseDTO {
     private String endAddress;
     @JsonFormat(pattern = "HH:mm:ss dd.MM.yyyy")
     private LocalDateTime dateCreated;
-    private boolean soberDriver;
+    private String[] services;
 
-    public OrderResponseDTO(Long idOrder, String text,
-                            BigDecimal price, String modelCar,
-                            String brandName, String startAddress,
-                            String endAddress, LocalDateTime dateCreated,
-                            boolean soberDriver) {
-        this.idOrder = idOrder;
-        this.text = text;
-        this.price = price;
-        this.modelCar = modelCar;
-        this.brandName = brandName;
-        this.startAddress = startAddress;
-        this.endAddress = endAddress;
+    public OrderResponseDTO() {
+    }
+
+    public OrderResponseDTO(Long id, LocalDateTime dateCreated , TaxiCar taxiCar) {
+        this.id = id;
+        this.info =  "Заказ: №" + id + " на сумму " + taxiCar.getPrice() + "р. оформлен!";
         this.dateCreated = dateCreated;
-        this.soberDriver = soberDriver;
+        this.price = taxiCar.getPrice();
+        this.modelCar = taxiCar.getModel();
+        this.brandName = taxiCar.getBrandName();
+        this.startAddress = taxiCar.getLocation();
+        this.endAddress = taxiCar.getDestination();
+        this.services = taxiCar.getServices();
     }
 
-    public Long getIdOrder() {
-        return idOrder;
+    public Long getId() {
+        return id;
     }
 
-    public void setIdOrder(Long idOrder) {
-        this.idOrder = idOrder;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getBrandName() {
-        return brandName;
+    public String getInfo() {
+        return info;
     }
 
-    public void setBrandName(String brandName) {
-        this.brandName = brandName;
-    }
-
-    public LocalDateTime getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(LocalDateTime dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
+    public void setInfo(String info) {
+        this.info = info;
     }
 
     public BigDecimal getPrice() {
@@ -82,13 +65,12 @@ public class OrderResponseDTO {
         this.modelCar = modelCar;
     }
 
-
-    public boolean isSoberDriver() {
-        return soberDriver;
+    public String getBrandName() {
+        return brandName;
     }
 
-    public void setSoberDriver(boolean soberDriver) {
-        this.soberDriver = soberDriver;
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
     }
 
     public String getStartAddress() {
@@ -105,5 +87,21 @@ public class OrderResponseDTO {
 
     public void setEndAddress(String endAddress) {
         this.endAddress = endAddress;
+    }
+
+    public LocalDateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(LocalDateTime dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public String[] getServices() {
+        return services;
+    }
+
+    public void setServices(String[] services) {
+        this.services = services;
     }
 }

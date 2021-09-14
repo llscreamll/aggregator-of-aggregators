@@ -3,6 +3,7 @@ package com.project.service.taxi.entity;
 import com.project.service.taxi.entity.erole.RoleUser;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -20,8 +21,8 @@ public class User {
     @Column(name = "role", nullable = false)
     private RoleUser role;
 
-    @OneToOne(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE, orphanRemoval = true,optional = false)
-    private Order order;
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Order> orders;
 
     public User() {
     }
@@ -64,11 +65,11 @@ public class User {
         this.password = password;
     }
 
-    public Order getOrder() {
-        return order;
+    public List<Order> getOrders() {
+        return orders;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 }

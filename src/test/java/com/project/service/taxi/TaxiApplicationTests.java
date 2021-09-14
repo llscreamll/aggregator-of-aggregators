@@ -1,15 +1,17 @@
 package com.project.service.taxi;
 
+import com.project.service.taxi.auth.AuthRequest;
 import com.project.service.taxi.auth.AuthResponse;
 import com.project.service.taxi.controller.AuthAndRegisterController;
+import com.project.service.taxi.dto.OrderCanceledDTO;
 import com.project.service.taxi.dto.OrderRequestDTO;
 import com.project.service.taxi.dto.OrderResponseDTO;
 import com.project.service.taxi.dto.UserRequestDTO;
-import com.project.service.taxi.entity.TaxiCar;
+import com.project.service.taxi.exception.UserNotFoundException;
+import com.project.service.taxi.stub_connector.TaxiCar;
 import com.project.service.taxi.entity.erole.RoleUser;
-import com.project.service.taxi.repository.TaxiRepositoryIml;
 import com.project.service.taxi.service.OrderService;
-import com.project.service.taxi.service.TaxiSearchService;
+import com.project.service.taxi.service.TaxiService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +25,14 @@ import java.util.concurrent.ExecutionException;
 
 @SpringBootTest
 class TaxiApplicationTests {
-    StubPrincipal stubPrincipal = new StubPrincipal();
-    Long testOrderId;
+   private Long testOrderId;
 
     @Autowired
     AuthAndRegisterController authAndRegisterController;
     @Autowired
-    TaxiRepositoryIml taxiRepositoryIml;
-    @Autowired
     OrderService orderService;
     @Autowired
-    TaxiSearchService taxiSearchService;
+    TaxiService taxiService;
 
 
     @Test
@@ -44,8 +43,13 @@ class TaxiApplicationTests {
     }
 
     @Test
-    public void testSearchGettTaxiAtTheAadress() throws ExecutionException, InterruptedException {
-        CompletableFuture<List<TaxiCar>> completableFuture = taxiSearchService.findUberTaxi("Moskow", "Electrostal", stubPrincipal);
+    public void testShouldDiscardErrorThatUserNotFound() {
+        Assert.assertThrows(UserNotFoundException.class, () -> authAndRegisterController.checkLoginData(new AuthRequest("loginText", "passwordTest")));
+    }
+
+    @Test
+    public void testSearchExpensiveTaxiAtTheAddress() throws ExecutionException, InterruptedException {
+        CompletableFuture<List<TaxiCar>> completableFuture = taxiService.searchExpensiveTaxi("Moskow", "Electrostal", "TestLogin");
         List<TaxiCar> taxiUberList = completableFuture.get();
         Assert.assertNotNull(taxiUberList);
         Assert.assertTrue(taxiUberList.size() >= 1);
@@ -54,8 +58,8 @@ class TaxiApplicationTests {
     }
 
     @Test
-    public void testSearchYandexTaxiAtTheAadress() throws ExecutionException, InterruptedException {
-        CompletableFuture<List<TaxiCar>> completableFuture = taxiSearchService.findYandexTaxi("Noginsk", "Balashikha", stubPrincipal);
+    public void testSearchRegularTaxiAtTheAddress() throws ExecutionException, InterruptedException {
+        CompletableFuture<List<TaxiCar>> completableFuture = taxiService.searchRegularTaxi("Noginsk", "Balashikha", "TestLogin");
         List<TaxiCar> taxiYandexList = completableFuture.get();
 
         Assert.assertNotNull(taxiYandexList);
@@ -65,44 +69,37 @@ class TaxiApplicationTests {
     }
 
     @Test
-    public void testSearchUberTaxiAtTheAadress() throws ExecutionException, InterruptedException {
-        CompletableFuture<List<TaxiCar>> completableFuture = taxiSearchService.findGetTaxi("Reutovo", "Zheleznodorozhny", stubPrincipal);
-        List<TaxiCar> taxiGettList = completableFuture.get();
-        Assert.assertNotNull(taxiGettList);
-        Assert.assertTrue(taxiGettList.size() >= 1);
-        Assert.assertEquals(taxiGettList.get(0).getLocation(), "Reutovo");
-        Assert.assertEquals(taxiGettList.get(0).getDestination(), "Zheleznodorozhny");
+    public void testSearchCheapTaxiAtTheAddress() throws ExecutionException, InterruptedException {
+        CompletableFuture<List<TaxiCar>> completableFuture = taxiService.searchExpensiveTaxi("Reutovo", "Zheleznodorozhny", "TestLogin");
+        List<TaxiCar> taxiExpensiveList = completableFuture.get();
+        Assert.assertNotNull(taxiExpensiveList);
+        Assert.assertTrue(taxiExpensiveList.size() >= 1);
+        Assert.assertEquals(taxiExpensiveList.get(0).getLocation(), "Reutovo");
+        Assert.assertEquals(taxiExpensiveList.get(0).getDestination(), "Zheleznodorozhny");
     }
 
     @Test
     public void testOrderCreated() throws ExecutionException, InterruptedException {
         testSaveUserAndReturnToken();
-        testSearchUberTaxiAtTheAadress();
+        testSearchExpensiveTaxiAtTheAddress();
 
         OrderRequestDTO orderRequestDTO = new OrderRequestDTO();
-        orderRequestDTO.setBrand("uber");
+        orderRequestDTO.setBrand("expensive");
         orderRequestDTO.setCarId(1l);
         orderRequestDTO.setStartAddress("Moskow");
         orderRequestDTO.setEndAddress("Electrostal");
 
-        OrderResponseDTO order = orderService.createOrder(orderRequestDTO, null, stubPrincipal);
+        OrderResponseDTO order = orderService.createOrder(orderRequestDTO, "TestLogin");
         Assert.assertNotNull(orderRequestDTO);
-        Assert.assertEquals(order.getText(),"Заказ оформлен");
-        Assert.assertEquals(order.getBrandName(),"uber");
-        testOrderId = order.getIdOrder();
+        Assert.assertEquals(order.getBrandName(),"expensive");
+        testOrderId = order.getId();
         Assert.assertTrue(testOrderId != null);
     }
 
-    @Test void removeOrder() throws ExecutionException, InterruptedException {
+    @Test void testRemoveOrder() throws ExecutionException, InterruptedException {
         testOrderCreated();
-        OrderResponseDTO orderResponseDTO = orderService.orderCancel(testOrderId);
-        Assert.assertNotNull(orderResponseDTO);
-        Assert.assertEquals(orderResponseDTO.getText(),"Заказ отменен");
+        OrderCanceledDTO orderCanceledDTO = orderService.orderCancel(testOrderId);
+        Assert.assertTrue(orderCanceledDTO.getInfo().contains("отменен"));
     }
-
-    @Test()
-    void contextLoads() {
-    }
-
 
 }

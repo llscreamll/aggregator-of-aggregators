@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 public class AuthAndRegisterController {
     private final UserService userService;
@@ -23,7 +25,7 @@ public class AuthAndRegisterController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> saveUser(@RequestBody UserRequestDTO userRequestDTO){
+    public ResponseEntity<AuthResponse> saveUser(@Valid @RequestBody UserRequestDTO userRequestDTO){
         System.out.println(userRequestDTO);
        return new ResponseEntity<>(userService.saveUser(userRequestDTO),HttpStatus.CREATED) ;
     }

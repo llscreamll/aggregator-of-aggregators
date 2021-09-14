@@ -1,6 +1,7 @@
-package com.project.service.taxi.entity;
+package com.project.service.taxi.stub_connector;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 public class TaxiCar {
     private Long id;
@@ -10,9 +11,12 @@ public class TaxiCar {
     private BigDecimal price;
     private String location;
     private String destination;
-    private boolean soberDriver;
+    private String [] services;
 
-    public TaxiCar(Long id, String brandName, String model, int yearOfManufacture, BigDecimal price, boolean soberDriver , String location, String destination) {
+    public TaxiCar() {
+    }
+
+    public TaxiCar(Long id, String brandName, String model, int yearOfManufacture, BigDecimal price, String location, String destination, String[] services) {
         this.id = id;
         this.brandName = brandName;
         this.model = model;
@@ -20,19 +24,7 @@ public class TaxiCar {
         this.price = price;
         this.location = location;
         this.destination = destination;
-        this.soberDriver = soberDriver;
-    }
-
-    public String getBrandName() {
-        return brandName;
-    }
-
-    public void setBrandName(String brandName) {
-        this.brandName = brandName;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+        this.services = services;
     }
 
     public Long getId() {
@@ -41,6 +33,14 @@ public class TaxiCar {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
     }
 
     public String getModel() {
@@ -59,16 +59,12 @@ public class TaxiCar {
         this.yearOfManufacture = yearOfManufacture;
     }
 
-    public boolean isSoberDriver() {
-        return soberDriver;
-    }
-
-    public void setSoberDriver(boolean soberDriver) {
-        this.soberDriver = soberDriver;
-    }
-
     public BigDecimal getPrice() {
         return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public String getLocation() {
@@ -87,6 +83,14 @@ public class TaxiCar {
         this.destination = destination;
     }
 
+    public String[] getServices() {
+        return services;
+    }
+
+    public void setServices(String[] services) {
+        this.services = services;
+    }
+
     @Override
     public String toString() {
         return "TaxiCar{" +
@@ -97,7 +101,7 @@ public class TaxiCar {
                 ", price=" + price +
                 ", location='" + location + '\'' +
                 ", destination='" + destination + '\'' +
-                ", soberDriver=" + soberDriver +
+                ", services=" + Arrays.toString(services) +
                 '}';
     }
 }

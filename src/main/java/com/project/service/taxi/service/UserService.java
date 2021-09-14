@@ -6,10 +6,10 @@ import com.project.service.taxi.dto.UserRequestDTO;
 import com.project.service.taxi.entity.User;
 import com.project.service.taxi.exception.LoginAndPasswordException;
 import com.project.service.taxi.exception.LoginBeBusyException;
-import com.project.service.taxi.exception.NotFoundException;
+import com.project.service.taxi.exception.UserNotFoundException;
+import com.project.service.taxi.mapper.UserMapper;
 import com.project.service.taxi.repository.UserRepository;
 import com.project.service.taxi.security.JWTTokenProvider;
-import com.project.service.taxi.transfer.UserTransfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ public class UserService {
         if (checkLoginToDB) {
             throw new LoginBeBusyException();
         }
-        User user = UserTransfer.fromUserRequestDTOToUser(userRequestDTO);
+        User user = UserMapper.fromUserRequestDTOToUser(userRequestDTO);
         String token = jwtProvider.generateToken(user.getLogin());
         user.setPassword(bCryptPasswordEncoder.encode(userRequestDTO.getPassword()));
         userRepository.save(user);
@@ -40,7 +40,7 @@ public class UserService {
     }
 
     public User findByLogin(String login) {
-        return userRepository.findByLogin(login).orElseThrow(NotFoundException::new);
+        return userRepository.findByLogin(login).orElseThrow(LoginAndPasswordException::new);
     }
 
     public AuthResponse checkLoginAndPassword(AuthRequest authRequest) {
@@ -50,7 +50,7 @@ public class UserService {
     }
 
     public User findByLoginAndPassword(String login, String password) {
-        User users = userRepository.findByLogin(login).orElseThrow(NotFoundException::new);
+        User users = userRepository.findByLogin(login).orElseThrow(UserNotFoundException::new);
         if (users != null) {
             if (bCryptPasswordEncoder.matches(password, users.getPassword())) {
                 return users;

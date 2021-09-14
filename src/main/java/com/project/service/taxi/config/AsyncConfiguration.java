@@ -1,4 +1,4 @@
-package com.project.service.taxi.acync_config;
+package com.project.service.taxi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

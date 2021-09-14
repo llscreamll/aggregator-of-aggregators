@@ -1,19 +1,25 @@
 package com.project.service.taxi.dto;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 public class OrderRequestDTO {
+    @NotBlank(message = "укажите выбранную вами фирму такси")
     private String brand;
+    @Min(value = 0,message = "Укажите привильный carId")
     private Long carId;
+    @NotBlank(message = "укажите начальный адрес")
     private String startAddress;
+    @NotBlank(message = "укажите конечный адрес")
     private String endAddress;
+
     public OrderRequestDTO() {
     }
 
-    public OrderRequestDTO(@NotEmpty(message = "укажите интересующую фирму Такси") String brand,
-                           @NotEmpty(message = "укажите индификатор машины") Long carId,
-                           @NotEmpty(message = "укажите начальный адрес") String startAddress,
-                           @NotEmpty(message = "укажите конечный адрес") String endAddress) {
+    public OrderRequestDTO(String brand,
+                           Long carId,
+                           String startAddress,
+                           String endAddress) {
         this.brand = brand;
         this.carId = carId;
         this.startAddress = startAddress;

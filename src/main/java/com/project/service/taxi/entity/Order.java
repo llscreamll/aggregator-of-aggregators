@@ -12,12 +12,10 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long orderId;
-
-    @OneToOne(fetch = FetchType.LAZY)
+    private Long id;
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
     @Column(name = "car_id")
     private Long carId;
     @Column(name = "price",columnDefinition = "integer")
@@ -26,21 +24,25 @@ public class Order {
     @Column(name = "creation_date_order")
     private LocalDateTime creationDate;
 
-    public Order(Long carId, BigDecimal price, User user) {
-        this.carId = carId;
+    @Column(name = "canceled_order")
+    private Boolean canceledOrder;
+
+    public Order(Long id, BigDecimal price, User user,Boolean canceledOrder) {
+        this.id = id;
         this.price = price;
         this.user = user;
+        this.canceledOrder = canceledOrder;
     }
 
     public Order() {
     }
 
-    public Long getOrderId() {
-        return orderId;
+    public Long getId() {
+        return id;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public User getUser() {
@@ -49,10 +51,6 @@ public class Order {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
     }
 
     public Long getCarId() {
@@ -75,13 +73,26 @@ public class Order {
         return creationDate;
     }
 
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Boolean getCanceledOrder() {
+        return canceledOrder;
+    }
+
+    public void setCanceledOrder(Boolean canceledOrder) {
+        this.canceledOrder = canceledOrder;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
-                "orderId=" + orderId +
+                "id=" + id +
                 ", carId=" + carId +
                 ", price=" + price +
-                ", creationDate=" + creationDate +
+                ", creation_date=" + creationDate +
+                ", canceled_order=" + canceledOrder +
                 '}';
     }
 }

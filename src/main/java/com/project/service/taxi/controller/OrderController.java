@@ -1,20 +1,19 @@
 package com.project.service.taxi.controller;
 
+import com.project.service.taxi.dto.OrderCanceledDTO;
 import com.project.service.taxi.dto.OrderRequestDTO;
 import com.project.service.taxi.dto.OrderResponseDTO;
 import com.project.service.taxi.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.security.Principal;
-import java.util.concurrent.ExecutionException;
 
 @RestController
 public class OrderController {
@@ -27,13 +26,13 @@ public class OrderController {
 
 
     @PostMapping("/order")
-    public ResponseEntity<?> createOrder(@Validated  @RequestBody OrderRequestDTO orderRequestDTO , BindingResult result, Principal principal) throws ExecutionException, InterruptedException {
-    return  new ResponseEntity<>(orderService.createOrder(orderRequestDTO,result,principal),HttpStatus.CREATED) ;
+    public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody OrderRequestDTO orderRequestDTO, Principal principal) {
+        return new ResponseEntity<>(orderService.createOrder(orderRequestDTO, principal.getName()), HttpStatus.CREATED);
     }
 
     @PostMapping("/order/cancel/{orderId}")
-    public ResponseEntity<OrderResponseDTO> cancelOrder(@PathVariable("orderId") Long orderId) {
-        return  new ResponseEntity<>(orderService.orderCancel(orderId), HttpStatus.OK) ;
+    public ResponseEntity<OrderCanceledDTO> cancelOrder(@PathVariable("orderId") Long orderId) {
+        return new ResponseEntity<>(orderService.orderCancel(orderId),HttpStatus.OK);
     }
 
 }

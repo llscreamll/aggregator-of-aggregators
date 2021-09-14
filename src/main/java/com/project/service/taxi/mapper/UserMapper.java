@@ -1,10 +1,10 @@
-package com.project.service.taxi.transfer;
+package com.project.service.taxi.mapper;
 
 import com.project.service.taxi.dto.UserRequestDTO;
 import com.project.service.taxi.entity.User;
 import com.project.service.taxi.entity.erole.RoleUser;
 
-public class UserTransfer {
+public class UserMapper {
     public static User fromUserRequestDTOToUser(UserRequestDTO userRequestDTO) {
         User users = new User();
         users.setLogin(userRequestDTO.getLogin());

@@ -7,7 +7,6 @@ import com.project.service.taxi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +30,7 @@ public class AuthAndRegisterController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<AuthResponse> checkLoginData(@Validated @RequestBody AuthRequest authRequest) {
+    public ResponseEntity<AuthResponse> checkLoginData(@Valid @RequestBody AuthRequest authRequest) {
         AuthResponse authResponse = userService.checkLoginAndPassword(authRequest);
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }

@@ -1,9 +1,8 @@
 package com.project.service.taxi.security;
 
 
-import com.project.service.taxi.exception.NotFoundException;
-import com.project.service.taxi.user_config.CustomUserDetails;
-import com.project.service.taxi.user_config.CustomerUsersDetailsService;
+import com.project.service.taxi.config.CustomUserDetails;
+import com.project.service.taxi.config.CustomerUsersDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

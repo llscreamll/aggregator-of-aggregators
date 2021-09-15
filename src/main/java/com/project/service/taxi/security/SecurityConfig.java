@@ -1,7 +1,7 @@
 package com.project.service.taxi.security;
 
 
-import com.project.service.taxi.user_config.CustomerUsersDetailsService;
+import com.project.service.taxi.config.CustomerUsersDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

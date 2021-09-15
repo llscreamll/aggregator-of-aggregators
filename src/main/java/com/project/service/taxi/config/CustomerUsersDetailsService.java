@@ -1,4 +1,4 @@
-package com.project.service.taxi.user_config;
+package com.project.service.taxi.config;
 
 
 import com.project.service.taxi.service.UserService;
